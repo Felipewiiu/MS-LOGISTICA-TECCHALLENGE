@@ -1,0 +1,31 @@
+package br.com.mslogistica.ms_logistica.infrastructure.exeptionhandler;
+
+import br.com.mslogistica.ms_logistica.application.exeptions.NotFoundDeliveryPersonExeption;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.time.Instant;
+
+@ControllerAdvice
+public class ControllerExeptionHandler {
+
+    @ExceptionHandler(NotFoundDeliveryPersonExeption.class)
+    public ResponseEntity<StandardError> EntityNotFound(NotFoundDeliveryPersonExeption ex, HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError error = new StandardError();
+
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError(ex.getMessage());
+        error.setMessage("Entity not found");
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(error);
+    }
+
+
+}
